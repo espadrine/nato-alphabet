@@ -182,14 +182,20 @@ function cachedAudio(url) {
 }
 
 function preloadAudio() {
-  return Promise.all(alphabet.map(c => {
-    const url = `/audio/${c}.mp3`;
-    return fetch(url).then(audio => {
-      cache.put(url, audio.clone());
-      return audio;
-    }).then(audio => audio.blob())
-    .then(blob => cachedAudioBlobURLs.set(url, URL.createObjectURL(blob)));
-  }));
+  return window.caches.open('nato-pronunciation-audio-cache')
+  .then(cache => {
+    Promise.all(alphabet.map(c => {
+      const url = `/audio/${c}.mp3`;
+      return cache.match(url).then(audio => {
+        if (audio) { return audio; }
+        return fetch(url).then(audio => {
+          cache.put(url, audio.clone());
+          return audio;
+        });
+      }).then(audio => audio.blob())
+      .then(blob => cachedAudioBlobURLs.set(url, URL.createObjectURL(blob)));
+    }));
+  });
 }
 
 function verifyListen() {
