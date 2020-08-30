@@ -1,37 +1,76 @@
 <!doctype html><meta charset=utf-8>
 <title>NATO Phonetic Alphabet Learning Page</title>
 <style>
-  html { font-family: 'Cascadia Code', monospace; font-size: 2rem; }
-  #exampleOutput, #wordOutput, #pronunciationOutput { background-color: #eee; }
+  html {
+    font-family: 'Cascadia Code', monospace; font-size: 2rem;
+    background-color: #324;
+    color: #caf;
+    text-align: center;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  button, input {
+    background-color: #dcf;
+    border: 1px solid #879;
+    border-radius: 100% / 33%;
+    padding: .3em 1em;
+    box-shadow: 0 0 5px #d5f inset;
+    transition: .3s box-shadow;
+    font-family: 'Cascadia Code', monospace;
+    font-size: 0.4em;
+    cursor: pointer;
+  }
+  button:enabled, input:enabled { color: #324; }
+  button:active, input:active { 
+    box-shadow: 5px 3px 5px #d8f inset, -5px -3px 5px #d8f inset;
+  }
+  input[type=text] { background-color: #fef; }
+  #levelOutput { font-size: 0.4em; }
+  output {
+    background-color: #435;
+    padding: 0 .3em;
+    border: 1px solid #546;
+    border-radius: 2px;
+  }
+  p.nobot { margin-bottom: 0; }
+  #wordOutput, #pronunciationOutput { display: block; }
   #tutorial > *, #listenDiv { display: none; }
 </style>
+<h1>NATO Phonetic Alphabet</h1>
+<p><output id=exampleOutput></output>
 <div>
-  <output id=exampleOutput></output>
-</div>
-<div>
-  <button onclick='verify()'>Verify</button>
-  <button onclick='prevLevel()'>Previous level</button>
-  <button onclick='nextLevel()'>Next level</button>
-  <button onclick='retryLevel()'>Retry level</button>
+  <button id=verifyBut onclick='verify()'>Verify</button>
+  <button id=prevLevelBut onclick='prevLevel()'>Previous level</button>
+  <button id=nextLevelBut onclick='nextLevel()'>Next level</button>
+  <button id=retryLevelBut onclick='retryLevel()'>Retry level</button>
   <span id=levelOutput></span>
 </div>
 <form id=listenDiv action='javascript:verifyListen()'>
   <input type=button onclick='listen()' value=Listen>
-  <input autocapitalize=none autocomplete=off id=listenInput>
+  <input type=text autocapitalize=none autocomplete=off spellcheck=false id=listenInput>
   <button>Validate</button>
 </form>
-<p id=pronunciationOutput>
-<p id=wordOutput>
+<p class=nobot><output id=pronunciationOutput></output>
+<p class=nobot><output id=wordOutput></output>
 <div id=tutorial>
-  <p id=tutorial0>Let’s learn the NATO phonetic alphabet. First, the digits.
-    Most of them are pronounced in normal English.
-    Try spelling the line at the top (which is just a zero for now), verify your
-    pronunciation, and move on to the next level by clicking on the button.
-  <p id=tutorial1>Zero and one are both the same as English pronunciation.
-    Note that you always say each digit individually; never “ten”.
+  <div id=tutorial0>
+    <p>Let’s learn the NATO phonetic alphabet.
+    <p>First, the digits.
+    <p>Most of them are pronounced in normal English.
+    <p>Try spelling the line at the top (which is just a zero for now), verify your pronunciation, and move on to the next level by clicking on the button.
+  </div>
+  <div id=tutorial1>
+    <p>Zero and one are both the same as English pronunciation.
+    <p>Note that you always say each digit individually; never “ten”.
+  </div>
   <p id=tutorial2>Same for two.
-  <p id=tutorial3>Three is different: you need to say “tree” instead.
-    Indeed, the “th” sound is hard to distinguish from radio noise.
+  <div id=tutorial3><p>Three is different: you need to say “tree” instead.
+    <p>Indeed, the “th” sound is hard to distinguish from radio noise.
+  </div>
   <p id=tutorial4>Four is also different: say “fower” instead.
   <p id=tutorial5>Five is nearly the same as English, but with an F instead of the V.
   <p id=tutorial6>Six is the same as English.
@@ -39,8 +78,10 @@
   <p id=tutorial8>Eight is also normal.
   <p id=tutorial9>You must add an R sound at the end when saying nine: NIN-ER.
   <p id=tutorial10>When you see X, say Y.
-  <p id=tutorial36>Let’s switch it up. Listen to the NATO sequence, and try to write it accurately.
-    Retry a few times, then move to the next level.
+  <div id=tutorial36>
+    <p>Let’s switch it up. Listen to the NATO sequence, and try to write it accurately.
+    <p>Retry a few times, then move to the next level.
+  </div>
   <p id=tutorial37>Train more by retrying this level.
 </div>
 <script>
@@ -55,73 +96,80 @@ class RandPerm { // Returns a sequence of permutations in [0, max-1].
     this.state = Array(max);
     this.max = max;
     this.i = max - 1;
-    for (var i = 0; i < max; i++) {
+    for (let i = 0; i < max; i++) {
       this.state[i] = i;
     }
   }
   gen() {
-    var i = this.i, max = this.max, j = Math.floor(Math.random() * (i+1));
+    const i = this.i, max = this.max, j = Math.floor(Math.random() * (i+1));
     [this.state[i], this.state[j]] = [this.state[j], this.state[i]];
     this.i = (max + i - 1) % max;
     return this.state[i];
   }
 }
 function randSeq(size, set) {
-  var s = '', r = new RandPerm(set);
-  for (var i = size; i > 0; i--) {
+  let s = '', r = new RandPerm(set);
+  for (let i = size; i > 0; i--) {
     s += alphabet[r.gen()];
   }
   return s;
 }
 function natoWords(code) {
-  var res = '';
-  for (var i = 0; i < code.length; i++) {
+  let res = '';
+  for (let i = 0; i < code.length; i++) {
     res += words[indexFromAlphabet[code[i]]] + ' ';
   }
   return res;
 }
 function natoPronunciation(code) {
-  var res = '';
-  for (var i = 0; i < code.length; i++) {
+  let res = '';
+  for (let i = 0; i < code.length; i++) {
     res += pronunciation[indexFromAlphabet[code[i]]] + ' ';
   }
   return res;
 }
 function natoSynthesis(code) {
-  var res = '';
-  for (var i = 0; i < code.length; i++) {
+  let res = '';
+  for (let i = 0; i < code.length; i++) {
     res += synthesizedWords[indexFromAlphabet[code[i]]] + ', ';
   }
   return res;
 }
 function generate() {
-  var max = Math.min(36, level + 1);
-  var val = randSeq(Math.min(10, max), max);
+  const max = Math.min(36, level + 1);
+  let val = randSeq(Math.min(10, max), max);
   if (level >= 10 && level < 36) {
-    var i = Math.floor(Math.random() * val.length);
+    const i = Math.floor(Math.random() * val.length);
     val = val.slice(0, i) + alphabet[level] + val.slice(i + 1);
   }
   exampleOutput.value = val;
-  wordOutput.textContent = '';
-  pronunciationOutput.textContent = '';
+  hideOutput(wordOutput);
+  hideOutput(pronunciationOutput);
   levelOutput.textContent = 'Level ' + level + '.';
 }
+function hideOutput(o) {
+  o.parentNode.style.display = 'none';
+  o.textContent = '';
+}
+function showOutput(o, msg) {
+  o.innerHTML = msg;
+  o.parentNode.style.display = 'block';
+}
 function verify() {
-  wordOutput.innerHTML = natoWords(exampleOutput.value);
-  pronunciationOutput.innerHTML = natoPronunciation(exampleOutput.value);
+  showOutput(wordOutput, natoWords(exampleOutput.value));
+  showOutput(pronunciationOutput, natoPronunciation(exampleOutput.value));
   listen();
 }
 function listen() {
   listenInput.focus();
-  var utter = new SpeechSynthesisUtterance(natoSynthesis(exampleOutput.value));
+  const utter = new SpeechSynthesisUtterance(natoSynthesis(exampleOutput.value));
   utter.rate = 0.6;
   utter.onerror = event => console.log('error', event);
-  utter.onend = event => console.log('end', event);
   window.speechSynthesis.speak(utter);
 }
 function verifyListen() {
-  document.getElementById('exampleOutput').style.visibility = 'visible';
-  var input = listenInput.value;
+  exampleOutput.style.visibility = 'visible';
+  let input = listenInput.value;
   input = input.toLowerCase().replace(/[^a-z0-9]/g, '');
   if (listenInput.value === exampleOutput.value) {
     alert('Correct!');
@@ -132,30 +180,30 @@ function closeLevel(level) {
   if (level < 10) {
     document.getElementById('tutorial' + level).style.display = 'none';
   } else if (level < 36) {
-    document.getElementById('tutorial10').style.display = 'none';
+    tutorial10.style.display = 'none';
   } else if (level === 36) {
-    document.getElementById('tutorial36').style.display = 'none';
-    document.getElementById('listenDiv').style.display = 'none';
-    document.getElementById('exampleOutput').style.visibility = 'visible';
+    tutorial36.style.display = 'none';
+    listenDiv.style.display = 'none';
+    exampleOutput.style.visibility = 'visible';
   } else {
-    document.getElementById('tutorial37').style.display = 'none';
+    tutorial37.style.display = 'none';
   }
 }
 function openLevel(level) {
+  prevLevelBut.disabled = level === 0;
+  nextLevelBut.disabled = level === 37;
   if (level < 10) {
     document.getElementById('tutorial' + level).style.display = 'block';
   } else if (level < 36) {
-    var n = document.getElementById('tutorial10');
-    n.innerHTML = 'When you see ' + alphabet[level] + ', say ' + pronunciation[level] + ' (' + words[level] + ').';
-    n.style.display = 'block';
+    tutorial10.innerHTML = 'When you see ' + alphabet[level] + ', say ' + pronunciation[level] + ' (' + words[level] + ').';
+    tutorial10.style.display = 'block';
   } else if (level === 36) {
-    document.getElementById('tutorial36').style.display = 'block';
-    document.getElementById('listenDiv').style.display = 'block';
-    document.getElementById('exampleOutput').style.visibility = 'hidden';
+    tutorial36.style.display = 'block';
+    listenDiv.style.display = 'block';
+    exampleOutput.style.visibility = 'hidden';
     listenInput.value = '';
   } else {
-    var n = document.getElementById('tutorial37');
-    n.style.display = 'block';
+    tutorial37.style.display = 'block';
   }
 }
 function retryLevel() {
@@ -176,5 +224,7 @@ function nextLevel() {
   openLevel(level);
   generate();
 }
-retryLevel();
+addEventListener('DOMContentLoaded', event => {
+  retryLevel();
+})
 </script>
