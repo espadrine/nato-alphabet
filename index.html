@@ -3,10 +3,11 @@
 <style>
   html {
     font-family: 'Cascadia Code', monospace; font-size: 2rem;
-    background-color: #324;
-    color: #caf;
     text-align: center;
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjEwMDAiPjxmaWx0ZXIgaWQ9ImEiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuMDgiIG51bU9jdGF2ZXM9IjMiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48ZmVDb2xvck1hdHJpeCB2YWx1ZXM9Ii43IC4zIDAgMCAwIC4zIC4zIDAgMCAwIC43IC4zIDAgMCAwIDAgMCAwIDAgMC4xIi8+PGZlTW9ycGhvbG9neSBvcGVyYXRvcj0iZXJvZGUiIHJhZGl1cz0iOCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIyMDAlIiBoZWlnaHQ9IjIwMCUiIGZpbHRlcj0idXJsKCNhKSIgdHJhbnNmb3JtPSJzY2FsZSguNyAxKSB0cmFuc2xhdGUoNTAwIC03MDApIHJvdGF0ZSg0NSkiPjwvcmVjdD48L3N2Zz4=), linear-gradient(90deg, rgba(0,0,0,.3) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,.3) 100%);
+    background-color: #0e5597;
+    color: #a8d0f4;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjEwMDAiPjxmaWx0ZXIgaWQ9ImEiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIuMDgiIG51bU9jdGF2ZXM9IjMiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48ZmVDb2xvck1hdHJpeCB2YWx1ZXM9Ii43IC4zIDAgMCAwIC4zIC4zIDAgMCAwIC43IC4zIDAgMCAwIDAgMCAwIDAgMC4xIi8+PGZlTW9ycGhvbG9neSBvcGVyYXRvcj0iZXJvZGUiIHJhZGl1cz0iOCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIyMDAlIiBoZWlnaHQ9IjIwMCUiIGZpbHRlcj0idXJsKCNhKSIgdHJhbnNmb3JtPSJzY2FsZSguNyAxKSB0cmFuc2xhdGUoNTAwIC03MDApIHJvdGF0ZSg0NSkiPjwvcmVjdD48L3N2Zz4=),
+      linear-gradient(90deg, rgba(0,0,0,.3) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,.3) 100%);
   }
   body {
     display: flex;
@@ -15,34 +16,34 @@
     justify-content: center;
   }
   button, input {
-    background-color: #dcf;
+    background-color: #80b8f4;
     border: 1px solid #879;
     border-radius: 100% / 33%;
     padding: .3em 1em;
-    box-shadow: 0 0 5px #d5f inset;
+    box-shadow: 0 0 5px #4291B7 inset;
     transition: .3s box-shadow;
     font-family: 'Cascadia Code', monospace;
     font-size: 0.4em;
     cursor: pointer;
   }
-  button:enabled, input:enabled { color: #324; }
+  button:enabled, input:enabled { color: #1d3079; }
   button:active, input:active {
-    box-shadow: 5px 3px 5px #d8f inset, -5px -3px 5px #d8f inset;
+    box-shadow: 5px 3px 5px #59b2dd inset, -5px -3px 5px #68afd0 inset;
   }
   input[type=text] { background-color: #fef; }
   #levelOutput { font-size: 0.4em; }
   output {
-    background-color: #435;
+    background-color: rgba(109, 196, 230, 0.2);
     padding: 0 .3em;
-    border: 1px solid #546;
+    border: 1px solid #7260a4;
     border-radius: 2px;
   }
-  p.nobot { margin-bottom: 0; }
   #wordOutput, #pronunciationOutput { display: block; }
   #tutorial > *, #listenDiv { display: none; }
 </style>
 <h1>NATO Phonetic Alphabet</h1>
-<p><output id=exampleOutput></output>
+
+<p><output id=trialOutput></output></p>
 <div>
   <button id=verifyBut onclick='verify()'>Verify</button>
   <button id=prevLevelBut onclick='prevLevel()'>Previous level</button>
@@ -50,13 +51,12 @@
   <button id=retryLevelBut onclick='retryLevel()'>Retry level</button>
   <span id=levelOutput></span>
 </div>
-<form id=listenDiv action='javascript:verifyListen()'>
+<form id=listenDiv action='javascript:verify()'>
   <input type=button onclick='listen()' value=Listen>
-  <input type=text autocapitalize=none autocomplete=off spellcheck=false id=listenInput>
-  <button>Validate</button>
+  <input type=text placeholder='Type what you hear' autocapitalize=none autocomplete=off spellcheck=false id=heardInput>
 </form>
-<p class=nobot><output id=pronunciationOutput></output>
-<p class=nobot><output id=wordOutput></output>
+<p><output id=pronunciationOutput></output></p>
+<p><output id=wordOutput></output></p>
 <div id=tutorial>
   <div id=tutorial0>
     <p>Let’s learn the NATO phonetic alphabet.
@@ -87,99 +87,19 @@
   </div>
   <p id=tutorial37>Train more by retrying this level.
 </div>
+
 <script>
-var alphabet = '0123456789abcdefghijklmnopqrstuvwxyz'.split('');
-var indexFromAlphabet = alphabet.reduce((a, e, i) => (a[e] = i, a), Object.create(null));
-var words = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Alfa', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliett', 'Kilo', 'Lima', 'Mike', 'November', 'Oscar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'Xray', 'Yankee', 'Zulu'];
-var pronunciation = ['ZEE-RO', 'WUN', 'TOO', 'TREE', 'FOW-ER', 'FIFE', 'SIX', 'SEV-EN', 'AIT', 'NIN-ER', '<b>AL</b>-FAH', '<b>BRAH</b>-VOH', '<b>SHAR</b>-LEE', '<b>DELL</b>-TAH', '<b>ECK</b>-OH', '<b>FOKS</b>-TROT', 'GOLF', 'HOH-<b>TEL</b>', '<b>IN</b>-DEE-AH', '<b>JEW</b>-LEE-<b>ETT</b>', '<b>KEY</b>-LOH', '<b>LEE</b>-MAH', 'MIKE', 'NO-<b>VEM</b>-BER', '<b>OSS</b>-CAH', 'PAH-<b>PAH</b>', 'KEH-<b>BECK</b>', '<b>ROW</b>-ME-OH', 'SEE-<b>AIR</b>-RAH', '<b>TANG</b>-GO', '<b>YOU</b>-NEE-FORM', '<b>VIK</b>-TAH', '<b>WISS</b>-KEY', '<b>ECKS</b>-RAY', '<b>YANG</b>-KEY', '<b>ZOO</b>-LOO'];
-var level = 0;
+const state = {
+  level: 0,
+  revealPronunciation: false,
+  trialSequence: '',
+  showTrialSequence: false,
+};
 
-class RandPerm { // Returns a sequence of permutations in [0, max-1].
-  constructor(max) {
-    this.state = Array(max);
-    this.max = max;
-    this.i = max - 1;
-    for (let i = 0; i < max; i++) {
-      this.state[i] = i;
-    }
-  }
-  gen() {
-    const i = this.i, max = this.max, j = Math.floor(Math.random() * (i+1));
-    [this.state[i], this.state[j]] = [this.state[j], this.state[i]];
-    this.i = (max + i - 1) % max;
-    return this.state[i];
-  }
-}
-
-function randSeq(size, set) {
-  let s = '', r = new RandPerm(set);
-  for (let i = size; i > 0; i--) {
-    s += alphabet[r.gen()];
-  }
-  return s;
-}
-
-function natoWords(code) {
-  let res = '';
-  for (let i = 0; i < code.length; i++) {
-    res += words[indexFromAlphabet[code[i]]] + ' ';
-  }
-  return res;
-}
-
-function natoPronunciation(code) {
-  let res = '';
-  for (let i = 0; i < code.length; i++) {
-    res += pronunciation[indexFromAlphabet[code[i]]] + ' ';
-  }
-  return res;
-}
-
-function generate() {
-  const max = Math.min(36, level + 1);
-  let val = randSeq(Math.min(10, max), max);
-  if (level >= 10 && level < 36) {
-    const i = Math.floor(Math.random() * val.length);
-    val = val.slice(0, i) + alphabet[level] + val.slice(i + 1);
-  }
-  exampleOutput.value = val;
-  hideOutput(wordOutput);
-  hideOutput(pronunciationOutput);
-  levelOutput.textContent = 'Level ' + level + '.';
-}
-
-function hideOutput(o) {
-  o.parentNode.style.display = 'none';
-  o.textContent = '';
-}
-
-function showOutput(o, msg) {
-  o.innerHTML = msg;
-  o.parentNode.style.display = 'block';
-}
-
-function verify() {
-  showOutput(wordOutput, natoWords(exampleOutput.value));
-  showOutput(pronunciationOutput, natoPronunciation(exampleOutput.value));
-  listen();
-}
-
-function listen() {
-  listenInput.focus();
-  const words = exampleOutput.value.split('')
-    .map(c => cachedAudio(`/audio/${c}.mp3`));
-  words.slice(0, -1).forEach((word, i) => {
-    word.addEventListener('ended', () => words[i+1].play());
-  });
-  words[0].play();
-}
-
-const cachedAudioBlobURLs = new Map();
-
-function cachedAudio(url) {
-  const cachedURL = cachedAudioBlobURLs.get(url);
-  return new Audio(cachedURL? cachedURL: url);
-}
+document.addEventListener('DOMContentLoaded', () => {
+  generateLevel();
+  preloadAudio();
+});
 
 function preloadAudio() {
   return window.caches.open('nato-pronunciation-audio-cache')
@@ -198,73 +118,153 @@ function preloadAudio() {
   });
 }
 
-function verifyListen() {
-  exampleOutput.style.visibility = 'visible';
-  let input = listenInput.value;
-  input = input.toLowerCase().replace(/[^a-z0-9]/g, '');
-  if (listenInput.value === exampleOutput.value) {
-    // TODO: replace alert, since it is deprecated.
-    alert('Correct!');
-  } else { alert('Incorrect.'); }
-}
-
-function closeLevel(level) {
-  if (level < 0) { return; }
-  if (level < 10) {
-    document.getElementById('tutorial' + level).style.display = 'none';
-  } else if (level < 36) {
-    tutorial10.style.display = 'none';
-  } else if (level === 36) {
-    tutorial36.style.display = 'none';
-    listenDiv.style.display = 'none';
-    exampleOutput.style.visibility = 'visible';
+function verify() {
+  if (state.level === 36) {
+    const heardCorrectly = state.trialSequence === heardInput.value;
+    if (heardCorrectly) {
+      state.revealPronunciation = true;
+      state.showTrialSequence = true;
+    }
+    alert(heardCorrectly? 'Correct!': 'Incorrect.');
   } else {
-    tutorial37.style.display = 'none';
+    state.revealPronunciation = true;
+    listen();
   }
+  renderWidgets();
 }
 
-function openLevel(level) {
-  prevLevelBut.disabled = level === 0;
-  nextLevelBut.disabled = level === 37;
-  if (level < 10) {
-    document.getElementById('tutorial' + level).style.display = 'block';
-  } else if (level < 36) {
-    tutorial10.innerHTML = 'When you see ' + alphabet[level] +
-      ', say ' + pronunciation[level] + ' (' + words[level] + ').';
-    tutorial10.style.display = 'block';
-  } else if (level === 36) {
-    tutorial36.style.display = 'block';
-    listenDiv.style.display = 'block';
-    exampleOutput.style.visibility = 'hidden';
-    listenInput.value = '';
-  } else {
-    tutorial37.style.display = 'block';
-  }
+function listen() {
+  heardInput.focus();
+  const words = trialOutput.value.split('')
+    .map(c => cachedAudio(`/audio/${c}.mp3`));
+  words.slice(0, -1).forEach((word, i) => {
+    word.addEventListener('ended', () => words[i+1].play());
+  });
+  words[0].play();
 }
 
-function retryLevel() {
-  closeLevel(level);
-  openLevel(level);
-  generate();
+const cachedAudioBlobURLs = new Map();
+
+function cachedAudio(url) {
+  const cachedURL = cachedAudioBlobURLs.get(url);
+  return new Audio(cachedURL? cachedURL: url);
 }
 
 function prevLevel() {
-  closeLevel(level);
-  level -= 1;
-  if (level < 0) { level = 0; }
-  openLevel(level);
-  generate();
+  state.level = Math.max(state.level - 1, 0);
+  generateLevel();
 }
 
 function nextLevel() {
-  closeLevel(level);
-  level += 1;
-  openLevel(level);
-  generate();
+  state.level += 1;
+  generateLevel();
 }
 
-addEventListener('DOMContentLoaded', event => {
-  retryLevel();
-  preloadAudio();
-})
+function retryLevel() {
+  generateLevel();
+}
+
+function generateLevel() {
+  state.trialSequence = generateRandomTrial(state.level);
+  state.revealPronunciation = false;
+  state.showTrialSequence = state.level !== 36;
+  heardInput.value = '';
+  renderWidgets();
+}
+
+function generateRandomTrial(level) {
+  const length = Math.min(10, level);
+  const knownLetters = [...alphabet.slice(0,level)];
+  const sequenceToGuess = shuffle(knownLetters).slice(0, length).join('');
+  const learnedLetter = alphabet[level];
+  if (learnedLetter === undefined) {
+    return sequenceToGuess;
+  }
+  const learnedLetterIdx = Math.floor(Math.random() * length);
+  return sequenceToGuess.slice(0, learnedLetterIdx) + learnedLetter + sequenceToGuess.slice(learnedLetterIdx);
+}
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function renderWidgets() {
+  levelOutput.textContent = `Level ${state.level}.`;
+  prevLevelBut.disabled = state.level === 0;
+  nextLevelBut.disabled = state.level === 37;
+  trialOutput.value = state.trialSequence;
+  trialOutput.style.visibility = state.showTrialSequence? 'visible': 'hidden';
+  listenDiv.style.display = (state.level !== 36)? 'none': 'block';
+  pronunciationOutput.innerHTML = natoPronunciation(state.trialSequence);
+  wordOutput.innerHTML = natoWord(state.trialSequence);
+  pronunciationOutput.parentNode.style.display =
+           wordOutput.parentNode.style.display =
+           state.revealPronunciation? 'block': 'none';
+  [...document.getElementById('tutorial').children].forEach(t => {
+    const isLetterTutorial = state.level >= 10 && state.level < 36;
+    if (t.id === 'tutorial10' && isLetterTutorial) {
+      t.style.display = 'block';
+      const letter = alphabet[state.level];
+      t.innerHTML = `When you see ${letter}, say ${natoPronunciationForLetter[letter]} (${natoWordForLetter[letter]}).`;
+    } else if (t.id === `tutorial${state.level}`) {
+      t.style.display = 'block';
+    } else {
+      t.style.display = 'none';
+    }
+  });
+}
+
+function natoPronunciation(trial) {
+  return trial.split('').map(c => natoPronunciationForLetter[c]).join(' ');
+}
+
+function natoWord(trial) {
+  return trial.split('').map(c => natoWordForLetter[c]).join(' ');
+}
+
+const natoCode = {
+  '0': { word: 'Zero',     pronunciation: 'ZEE-RO' },
+  '1': { word: 'One',      pronunciation: 'WUN' },
+  '2': { word: 'Two',      pronunciation: 'TOO' },
+  '3': { word: 'Three',    pronunciation: 'TREE' },
+  '4': { word: 'Four',     pronunciation: 'FOW-ER' },
+  '5': { word: 'Five',     pronunciation: 'FIFE' },
+  '6': { word: 'Six',      pronunciation: 'SIX' },
+  '7': { word: 'Seven',    pronunciation: 'SEV-EN' },
+  '8': { word: 'Eight',    pronunciation: 'AIT' },
+  '9': { word: 'Nine',     pronunciation: 'NIN-ER' },
+  'a': { word: 'Alfa',     pronunciation: '<b>AL</b>-FAH' },
+  'b': { word: 'Bravo',    pronunciation: '<b>BRAH</b>-VOH' },
+  'c': { word: 'Charlie',  pronunciation: '<b>SHAR</b>-LEE' },
+  'd': { word: 'Delta',    pronunciation: '<b>DELL</b>-TAH' },
+  'e': { word: 'Echo',     pronunciation: '<b>ECK</b>-OH' },
+  'f': { word: 'Foxtrot',  pronunciation: '<b>FOKS</b>-TROT' },
+  'g': { word: 'Golf',     pronunciation: 'GOLF' },
+  'h': { word: 'Hotel',    pronunciation: 'HOH-<b>TEL</b>' },
+  'i': { word: 'India',    pronunciation: '<b>IN</b>-DEE-AH' },
+  'j': { word: 'Juliett',  pronunciation: '<b>JEW</b>-LEE-<b>ETT</b>' },
+  'k': { word: 'Kilo',     pronunciation: '<b>KEY</b>-LOH' },
+  'l': { word: 'Lima',     pronunciation: '<b>LEE</b>-MAH' },
+  'm': { word: 'Mike',     pronunciation: 'MIKE' },
+  'n': { word: 'November', pronunciation: 'NO-<b>VEM</b>-BER' },
+  'o': { word: 'Oscar',    pronunciation: '<b>OSS</b>-CAH' },
+  'p': { word: 'Papa',     pronunciation: 'PAH-<b>PAH</b>' },
+  'q': { word: 'Quebec',   pronunciation: 'KEH-<b>BECK</b>' },
+  'r': { word: 'Romeo',    pronunciation: '<b>ROW</b>-ME-OH' },
+  's': { word: 'Sierra',   pronunciation: 'SEE-<b>AIR</b>-RAH' },
+  't': { word: 'Tango',    pronunciation: '<b>TANG</b>-GO' },
+  'u': { word: 'Uniform',  pronunciation: '<b>YOU</b>-NEE-FORM' },
+  'v': { word: 'Victor',   pronunciation: '<b>VIK</b>-TAH' },
+  'w': { word: 'Whiskey',  pronunciation: '<b>WISS</b>-KEY' },
+  'x': { word: 'Xray',     pronunciation: '<b>ECKS</b>-RAY' },
+  'y': { word: 'Yankee',   pronunciation: '<b>YANG</b>-KEY' },
+  'z': { word: 'Zulu',     pronunciation: '<b>ZOO</b>-LOO' },
+};
+const natoPronunciationForLetter = Object.keys(natoCode).reduce((map, c) => (map[c] = natoCode[c].pronunciation, map), {});
+const natoWordForLetter          = Object.keys(natoCode).reduce((map, c) => (map[c] = natoCode[c].word, map), {});
+const alphabet                   = Object.keys(natoCode).join('');
 </script>
