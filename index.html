@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function preloadAudio() {
   return window.caches.open('nato-pronunciation-audio-cache')
   .then(cache => {
-    Promise.all(alphabet.map(c => {
+    Promise.all([...alphabet].map(c => {
       const url = `/audio/${c}.mp3`;
       return cache.match(url).then(audio => {
         if (audio) { return audio; }
