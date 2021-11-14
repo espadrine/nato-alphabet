@@ -105,7 +105,7 @@ function preloadAudio() {
   return window.caches.open('nato-pronunciation-audio-cache')
   .then(cache => {
     Promise.all([...alphabet].map(c => {
-      const url = `/audio/${c}.mp3`;
+      const url = `audio/${c}.mp3`;
       return cache.match(url).then(audio => {
         if (audio) { return audio; }
         return fetch(url).then(audio => {
@@ -136,7 +136,7 @@ function verify() {
 function listen() {
   heardInput.focus();
   const words = trialOutput.value.split('')
-    .map(c => cachedAudio(`/audio/${c}.mp3`));
+    .map(c => cachedAudio(`audio/${c}.mp3`));
   words.slice(0, -1).forEach((word, i) => {
     word.addEventListener('ended', () => words[i+1].play());
   });
